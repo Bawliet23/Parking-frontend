@@ -7,7 +7,7 @@ import Details from './screens/Details';
 
 const App = () => {
   return (
-    <View className="h-full">
+    <View className="h-full font-netflix">
       <View className="h-full ">
         <Home />
         {/* <Details /> */}

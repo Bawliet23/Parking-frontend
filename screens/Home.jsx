@@ -7,6 +7,7 @@ import {
   TextInput,
   ScrollView,
   Image,
+  StyleSheet,
 } from 'react-native';
 import React, {useState} from 'react';
 import {
@@ -44,7 +45,7 @@ const Home = () => {
           </View>
         </View>
         <View className="flex flex-1">
-          <Text className="text-3xl font-bold text-white mx-3">
+          <Text className="text-3xl font-bold text-white mx-3 font-tilt">
             Let's find the best parking space
           </Text>
         </View>
@@ -105,5 +106,11 @@ const Home = () => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  fnt: {
+    fontFamily: 'Netflix Sans',
+  },
+});
 
 export default Home;

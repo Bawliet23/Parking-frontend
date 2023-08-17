@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme');
 module.exports = {
   content: [
     './App.{js,jsx,ts,tsx}',
@@ -6,7 +7,12 @@ module.exports = {
     './screens/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        netflix: ['"Netflix Sans"'],
+        tilt: ['"Tilt Prism"', ...defaultTheme.fontFamily.tilt],
+      },
+    },
   },
   plugins: [],
 };

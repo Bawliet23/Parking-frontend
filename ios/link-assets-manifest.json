@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "assets/fonts/Netflix Sans.ttf",
+      "sha1": "6e3334bf151185af25401dd367f282220bee41b9"
+    },
+    {
+      "path": "assets/fonts/Tilt Prism.ttf",
+      "sha1": "63aef8b9b8b0b8ad549e7c894e6470ea971a3add"
+    }
+  ]
+}
