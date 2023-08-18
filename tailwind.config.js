@@ -7,11 +7,9 @@ module.exports = {
     './screens/**/*.{js,jsx,ts,tsx}',
   ],
   theme: {
-    extend: {
-      fontFamily: {
-        netflix: ['"Netflix Sans"'],
-        tilt: ['"Tilt Prism"', ...defaultTheme.fontFamily.tilt],
-      },
+    fontFamily: {
+      netflixSans: 'Netflix Sans',
+      tiltPrism: 'Tilt Prism',
     },
   },
   plugins: [],

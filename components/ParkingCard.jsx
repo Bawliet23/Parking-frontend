@@ -13,10 +13,12 @@ import {Marker} from 'react-native-maps';
 import React from 'react';
 import {ChevronRightIcon} from 'react-native-heroicons/outline';
 
-const ParkingCard = () => {
+const ParkingCard = ({navigation}) => {
   return (
-    <View
-      onPress={() => {}}
+    <TouchableOpacity
+      onPress={() => {
+        navigation.navigate('Details');
+      }}
       className=" w-56 h-48  px-4 mr-4 pb-4 rounded-lg relative flex bg-white overflow-hidden">
       <View className="flex flex-row justify-between">
         <Text className=" text-black font-semibold text-lg mr-1">
@@ -43,7 +45,7 @@ const ParkingCard = () => {
           <Marker coordinate={{latitude: 33.5828236, longitude: -7.6435475}} />
         </MapView>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

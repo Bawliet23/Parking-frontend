@@ -18,7 +18,7 @@ import {
 import {MapPinIcon} from 'react-native-heroicons/solid';
 import ParkingCard from '../components/ParkingCard';
 
-const Home = ({navigation}) => {
+const Discovery = ({navigation}) => {
   const [selected, setselected] = useState(1);
   console.log(navigation);
 
@@ -108,10 +108,4 @@ const Home = ({navigation}) => {
   );
 };
 
-const styles = StyleSheet.create({
-  fnt: {
-    fontFamily: 'Netflix Sans',
-  },
-});
-
-export default Home;
+export default Discovery;
