@@ -21,10 +21,6 @@ const TabScreens = () => {
         tabBarStyle: {
           height: 60,
           position: 'absolute',
-          bottom: 16,
-          right: 16,
-          left: 16,
-          borderRadius: 16,
         },
       }}>
       <Tab.Screen

@@ -24,7 +24,7 @@ const Home = ({navigation}) => {
 
   return (
     <View className="bg-white h-full w-full">
-      <View className="h-2/5 bg-[#262A3A] flex">
+      <View className="h-2/5 bg-[#0e111f] flex">
         <View className="flex ml-3 flex-row flex-1">
           <View className="flex-1 pt-2">
             <TouchableOpacity className="flex flex-row  items-center">

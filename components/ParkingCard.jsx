@@ -19,7 +19,7 @@ const ParkingCard = ({navigation}) => {
       onPress={() => {
         navigation.navigate('Details');
       }}
-      className=" w-56 h-48  px-4 mr-4 pb-4 rounded-lg relative flex bg-white overflow-hidden">
+      className=" w-56 h-48  px-4 mr-4 pt-1 rounded-lg  relative flex bg-white overflow-hidden">
       <View className="flex flex-row justify-between">
         <Text className=" text-black font-semibold text-lg mr-1">
           Your Location
@@ -33,7 +33,7 @@ const ParkingCard = ({navigation}) => {
           2.5km . $3.00/h
         </Text>
       </View>
-      <View className="relative bg-red-500 w-full h-full rounded overflow-hidden mb-4">
+      <View className="relative bg-red-500 w-full h-32 rounded overflow-hidden mb-4">
         <MapView
           className="absolute top-0 left-0 right-0 bottom-0  rounded"
           region={{
