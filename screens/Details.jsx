@@ -8,6 +8,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
 } from 'react-native-heroicons/outline';
+import ParkingArea from '../components/ParkingArea';
 const Details = () => {
   return (
     <View className="w-full h-full bg-[#0e111f]">
@@ -31,6 +32,9 @@ const Details = () => {
         </View>
 
         <ChevronRightIcon size={25} color="white" />
+      </View>
+      <View className="flex">
+        <ParkingArea />
       </View>
     </View>
   );
