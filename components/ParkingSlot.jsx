@@ -1,9 +1,9 @@
 /* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
-import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity, Image} from 'react-native';
 import React, {useState} from 'react';
-
-const ParkingSlot = () => {
+import LinearGradient from 'react-native-linear-gradient';
+const ParkingSlot = ({isEmpty}) => {
   const [selected, setSelected] = useState(false);
 
   return (
@@ -17,10 +17,14 @@ const ParkingSlot = () => {
       }}
       horizontal
       showsHorizontalScrollIndicator={true}>
-      <View className="h-28 flex-1 mb-1 bg-black relative mr-1 ">
+      <LinearGradient
+        className="h-28 flex-1 mb-1  relative mr-1 "
+        start={{x: 0, y: 0.5}}
+        end={{x: 1, y: 0.5}}
+        colors={['#6366f1', 'transparent']}>
         <TouchableOpacity
           onPress={() => {
-            setSelected(!selected);
+            if (isEmpty) setSelected(!selected);
           }}
           className={` absolute flex justify-center items-center top-0 bottom-0 left-0 right-0 ${
             selected
@@ -28,8 +32,15 @@ const ParkingSlot = () => {
               : 'bg-gradient-to-r from-cyan-500 to-blue-500'
           }`}>
           {selected && <Text>Selected</Text>}
+          {!isEmpty && (
+            <Image
+              className="relative w-[120px] h-[120px]"
+              source={require('../assets/car.png')}
+              resizeMode={'contain'}
+            />
+          )}
         </TouchableOpacity>
-      </View>
+      </LinearGradient>
       <View className="flex-1 h-28 mb-1 bg-black relative ml-1 ">
         <View className="bg-gradient-to-r from-cyan-500 to-blue-500 absolute top-0 bottom-0 left-0 right-0"></View>
       </View>

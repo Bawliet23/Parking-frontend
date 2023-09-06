@@ -9,8 +9,9 @@ import {
   TicketIcon,
   MapIcon,
 } from 'react-native-heroicons/outline';
-import Discovery from './Discovery';
+import Discovery from './Parking';
 import Home from './Home';
+import Parking from './Parking';
 
 const TabScreens = () => {
   const Tab = createBottomTabNavigator();
@@ -35,7 +36,7 @@ const TabScreens = () => {
 
       <Tab.Screen
         name="Tickets"
-        component={Discovery}
+        component={Parking}
         options={{
           title: 'Tickets',
           tabBarIcon: () => <TicketIcon size={20} color="blue" />,
@@ -44,7 +45,7 @@ const TabScreens = () => {
       />
       <Tab.Screen
         name="Map"
-        component={Discovery}
+        component={Parking}
         options={{
           title: 'Map',
           tabBarIcon: () => <MapIcon size={20} color="blue" />,
@@ -53,7 +54,7 @@ const TabScreens = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={Discovery}
+        component={Parking}
         options={{
           title: 'Profile',
           tabBarIcon: () => <UserIcon size={20} color="blue" />,

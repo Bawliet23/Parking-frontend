@@ -5,10 +5,28 @@ import React from 'react';
 import ParkingSlot from './ParkingSlot';
 
 const ParkingArea = () => {
+  const areas = [
+    {
+      id: 1,
+      isEmpty: true,
+    },
+    {
+      id: 2,
+      isEmpty: false,
+    },
+    {
+      id: 3,
+      isEmpty: false,
+    },
+    {
+      id: 4,
+      isEmpty: true,
+    },
+  ];
   return (
     <View>
-      {[1, 2, 3, 4, 5].map(index => (
-        <ParkingSlot key={index} />
+      {areas.map(index => (
+        <ParkingSlot key={index.id} isEmpty={index.isEmpty} />
       ))}
     </View>
   );

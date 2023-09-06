@@ -2,17 +2,19 @@
 /* eslint-disable */
 import {View, Text} from 'react-native';
 import React from 'react';
-import MapView from 'react-native-maps';
+import LinearGradient from 'react-native-linear-gradient';
+
 import {
   ArrowLeftIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from 'react-native-heroicons/outline';
+
 import ParkingArea from '../components/ParkingArea';
 const Details = () => {
   return (
-    <View className="w-full h-full bg-[#0e111f]">
-      <View className=" flex flex-row  h-24  w-full ">
+    <View className="w-full h-full bg-[#0e111f] ">
+      <View className=" flex flex-row  h-24   w-full ">
         <View className=" flex-1  flex justify-center items-center">
           <View className=" flex justify-center items-center h-10 w-10 border-[#3F4250] rounded border-[1px]">
             <ArrowLeftIcon size={25} color="white" />
@@ -33,7 +35,7 @@ const Details = () => {
 
         <ChevronRightIcon size={25} color="white" />
       </View>
-      <View className="flex">
+      <View className="flex border-x-2 border-white px-3">
         <ParkingArea />
       </View>
     </View>
