@@ -14,8 +14,9 @@ import {EyeIcon, EyeSlashIcon} from 'react-native-heroicons/outline';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Login = ({navigation}) => {
+const Register = ({navigation}) => {
   const [email, setemail] = useState('');
+  const [name, setname] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisibility, setPasswordVisibility] = useState(true);
 
@@ -37,24 +38,12 @@ const Login = ({navigation}) => {
     console.log(password + ' ' + email);
     if (!password || !email) return;
     try {
-      // axios
-      //   .get('http://192.168.11.101:8080/api/v1/user/parking/2')
-      //   .then(function (response) {
-      //     // handle success
-      //     console.log(response);
-      //   })
-      //   .catch(function (error) {
-      //     // handle error
-      //     console.error(error.message);
-      //   })
-      //   .finally(function () {
-      //     // always executed
-      //   });
       const {data} = await axios.post(
-        'http://192.168.11.170:8080/api/v1/user/signIn',
+        'http://192.168.11.101:8080/api/v1/user/signUp',
         {
-          email: email,
-          password: password,
+          name,
+          email,
+          password,
         },
         {
           headers: {
@@ -83,8 +72,23 @@ const Login = ({navigation}) => {
       </View>
       <View className="w-full px-4 flex mt-4">
         <View className="flex my-2 ">
+          <Text className=" text-xl text-black">Name</Text>
+          <View className="w-full border-[1px] rounded-lg flex flex-row items-center bg-white px-1 py-[1px]">
+            <TextInput
+              className="w-full text-lg text-black"
+              onChangeText={v => {
+                setname(v);
+              }}
+              value={name}
+              placeholder="Name"
+              placeholderTextColor="#000"
+              keyboardType="ascii-capable"
+            />
+          </View>
+        </View>
+        <View className="flex my-2 ">
           <Text className=" text-xl text-black">Email</Text>
-          <View className="w-full border-[1px] rounded-lg flex flex-row items-center bg-white p-1">
+          <View className="w-full border-[1px] rounded-lg flex flex-row items-center bg-white px-1 py-[1px]">
             <TextInput
               className="w-full text-lg text-black"
               onChangeText={v => {
@@ -99,7 +103,7 @@ const Login = ({navigation}) => {
         </View>
         <View className="flex my-2">
           <Text className=" text-xl  text-black">Password</Text>
-          <View className="w-full border-[1px] rounded-lg flex flex-row items-center bg-white  p-1">
+          <View className="w-full border-[1px] rounded-lg flex flex-row items-center bg-white  px-1 py-[1px]">
             <TextInput
               className="flex-1 text-black text-lg"
               onChangeText={value => {
@@ -120,18 +124,13 @@ const Login = ({navigation}) => {
               )}
             </Pressable>
           </View>
-          <TouchableOpacity className="flex flex-row  w-full justify-end">
-            <Text className="text-black text-mg underline uppercase mr-1">
-              Forgot password?
-            </Text>
-          </TouchableOpacity>
         </View>
       </View>
-      <View className="flex h-40 w-full px-4 my-4">
+      <View className="flex h-30  w-full px-4 my-4">
         <Pressable
           className="h-14 w-full shadow-sm bg-[#1570EF] flex items-center justify-center mb-4 rounded-xl"
           onPress={loginButton}>
-          <Text className="text-white text-lg">Login In</Text>
+          <Text className="text-white text-lg">Sign Up</Text>
         </Pressable>
         <Pressable
           className="h-14 w-full shadow-xl bg-white flex-row font-semibold flex items-center justify-center rounded-xl"
@@ -141,7 +140,7 @@ const Login = ({navigation}) => {
             source={require('../assets/google.png')}
           />
           <Text className="text-black font-semibold text-lg">
-            Login In with google
+            Sign up with google
           </Text>
         </Pressable>
       </View>
@@ -150,11 +149,11 @@ const Login = ({navigation}) => {
         <Pressable
           className="h-12 border-[1px] w-40 shadow-xl bg-white font-semibold flex items-center justify-center rounded-xl"
           onPress={() => navigation.navigate('Register')}>
-          <Text className="text-black font-semibold text-lg">Register</Text>
+          <Text className="text-black font-semibold text-lg">Sign Up</Text>
         </Pressable>
       </View>
     </View>
   );
 };
 
-export default Login;
+export default Register;

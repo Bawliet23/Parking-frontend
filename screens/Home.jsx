@@ -9,7 +9,7 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   BellAlertIcon,
   ChevronDownIcon,
@@ -17,11 +17,60 @@ import {
 } from 'react-native-heroicons/outline';
 import {MapPinIcon} from 'react-native-heroicons/solid';
 import ParkingCard from '../components/ParkingCard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Geolocation from 'react-native-geolocation-service';
 
 const Home = ({navigation}) => {
   const [selected, setselected] = useState(1);
-  console.log(navigation);
+  useEffect(() => {
+    getLocation();
+  }, []);
 
+  const getLocation = () => {
+    const result = requestLocationPermission();
+    result.then(res => {
+      console.log('res is:', res);
+      if (res) {
+        Geolocation.getCurrentPosition(
+          position => {
+            console.log(position);
+            console.log(position);
+          },
+          error => {
+            // See error code charts below.
+            console.log(error.code, error.message);
+            console.log(false);
+          },
+          {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+        );
+      }
+    });
+  };
+
+  const requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Geolocation Permission',
+          message: 'Can we access your location?',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      console.log('granted', granted);
+      if (granted === 'granted') {
+        console.log('You can use Geolocation');
+        return true;
+      } else {
+        console.log('You cannot use Geolocation');
+        return false;
+      }
+    } catch (err) {
+      return false;
+    }
+  };
   return (
     <View className="bg-white h-full w-full">
       <View className="h-2/5 bg-[#0e111f] flex">
