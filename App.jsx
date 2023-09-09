@@ -11,6 +11,7 @@ import Parking from './screens/Parking';
 import SplashScreen from 'react-native-splash-screen';
 import Login from './screens/Login';
 import Register from './screens/Register';
+import Splash from './screens/Splash';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -26,6 +27,7 @@ const App = () => {
         screenOptions={{
           headerShown: false,
         }}>
+        <Stack.Screen name="Splash" component={Splash} />
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Tabs" component={TabScreens} />

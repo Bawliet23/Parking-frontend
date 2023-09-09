@@ -51,7 +51,7 @@ const Login = ({navigation}) => {
       //     // always executed
       //   });
       const {data} = await axios.post(
-        'http://192.168.11.170:8080/api/v1/user/signIn',
+        'http://192.168.11.101:8080/api/v1/user/signIn',
         {
           email: email,
           password: password,
@@ -65,7 +65,6 @@ const Login = ({navigation}) => {
       );
       const jsonValue = JSON.stringify(data);
       await AsyncStorage.setItem('user', jsonValue);
-      console.log(data);
       navigation.navigate('Tabs');
     } catch (error) {
       console.error(error.response);

@@ -17,8 +17,7 @@ public class MainActivity extends ReactActivity {
     return "Parking";
   }
 @Override
-  protected void onCreate(Bundle savedInstanceState) {
-      SplashScreen.show(this);
+  protected void onCreate(Bundle savedInstanceState) {;
       super.onCreate(savedInstanceState);
   }
   /**

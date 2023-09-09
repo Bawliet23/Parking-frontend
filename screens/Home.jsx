@@ -8,6 +8,7 @@ import {
   ScrollView,
   Image,
   StyleSheet,
+  PermissionsAndroid,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {
@@ -19,22 +20,39 @@ import {MapPinIcon} from 'react-native-heroicons/solid';
 import ParkingCard from '../components/ParkingCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
-
+import Geocoder from 'react-native-geocoding';
 const Home = ({navigation}) => {
   const [selected, setselected] = useState(1);
+  const [address, setaddress] = useState('');
   useEffect(() => {
+    // requestLocationPermission();
     getLocation();
   }, []);
 
-  const getLocation = () => {
+  const getLocation = async () => {
+    const v = await AsyncStorage.getItem('user');
+    const value = JSON.parse(v);
+    console.log(typeof JSON.parse(v));
+    console.log(v);
     const result = requestLocationPermission();
     result.then(res => {
-      console.log('res is:', res);
       if (res) {
         Geolocation.getCurrentPosition(
-          position => {
-            console.log(position);
-            console.log(position);
+          async position => {
+            value.lat = position.coords.latitude;
+            value.lon = position.coords.longitude;
+            console.log(value);
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('user', jsonValue);
+            Geocoder.init('AIzaSyBUDF9iyMau1IH76K7z2KVbwIPQbrpNTT0');
+
+            Geocoder.from(position.coords.latitude, position.coords.longitude)
+              .then(json => {
+                var addressComponent =
+                  json.results[0].address_components[1].long_name;
+                setaddress(addressComponent);
+              })
+              .catch(error => console.warn(error));
           },
           error => {
             // See error code charts below.
@@ -68,6 +86,7 @@ const Home = ({navigation}) => {
         return false;
       }
     } catch (err) {
+      console.log(err.message);
       return false;
     }
   };
@@ -82,7 +101,7 @@ const Home = ({navigation}) => {
             </TouchableOpacity>
             <View className="flex flex-row items-center">
               <MapPinIcon size={17} color="#0075FE" />
-              <Text className="text-white text-lg ml-1">Casablanca, Maroc</Text>
+              <Text className="text-white text-lg ml-1">{address}</Text>
             </View>
           </View>
           <View className="w-20 relative">
