@@ -18,7 +18,10 @@ const Parking = props => {
         latitude: user.lat,
         longitude: user.lon,
       });
-      // console.log(userLocation.lat);
+      mapRef.current.fitToSuppliedMarkers(['origin', 'destination'], {
+        edgePadding: {top: 50, right: 50, left: 50, bottom: 50},
+      });
+      console.log(userLocation.lat);
     };
 
     getUserLocation();

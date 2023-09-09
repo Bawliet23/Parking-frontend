@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Button,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
 import {EyeIcon, EyeSlashIcon} from 'react-native-heroicons/outline';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,20 +18,6 @@ const Login = ({navigation}) => {
   const [email, setemail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisibility, setPasswordVisibility] = useState(true);
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('user');
-        if (value !== null) {
-          navigation.navigate('Tabs');
-        }
-      } catch (e) {
-        // error reading value
-      }
-    };
-    getData();
-  }, []);
 
   const loginButton = async () => {
     console.log(password + ' ' + email);
@@ -51,7 +37,7 @@ const Login = ({navigation}) => {
       //     // always executed
       //   });
       const {data} = await axios.post(
-        'http://192.168.11.101:8080/api/v1/user/signIn',
+        'http://192.168.11.103:8080/api/v1/user/signIn',
         {
           email: email,
           password: password,
@@ -63,7 +49,11 @@ const Login = ({navigation}) => {
           },
         },
       );
-      const jsonValue = JSON.stringify(data);
+      const v = await AsyncStorage.getItem('user');
+      const user = JSON.parse(v);
+      const u = {...data, ...user};
+      console.log(u);
+      const jsonValue = JSON.stringify(u);
       await AsyncStorage.setItem('user', jsonValue);
       navigation.navigate('Tabs');
     } catch (error) {
