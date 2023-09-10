@@ -1,47 +1,84 @@
 /* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
-import {View, Text} from 'react-native';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
 
 import React, {useEffect, useState, useRef} from 'react';
 import MapView, {Marker} from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapViewDirections from 'react-native-maps-directions';
+import Geolocation from 'react-native-geolocation-service';
 const Parking = props => {
   const [userLocation, setuserLocation] = useState(null);
   const mapRef = useRef(null);
+  const [destination, setdestination] = useState({
+    latitude: 33.560487,
+    longitude: -7.697092,
+  });
 
+  const getUserLocation = async () => {
+    const value = await AsyncStorage.getItem('user');
+
+    const user = JSON.parse(value);
+    return user;
+  };
+
+  const stopTrackingLocation = () => {
+    Geolocation.clearWatch();
+  };
+
+  const startTrackingLocation = () => {
+    Geolocation.watchPosition(
+      position => {
+        const {latitude, longitude} = position.coords;
+        setuserLocation({latitude, longitude});
+      },
+      error => {
+        console.error('Location error:', error);
+      },
+      {
+        enableHighAccuracy: true,
+        distanceFilter: 10,
+      },
+    );
+  };
   useEffect(() => {
-    const getUserLocation = async () => {
-      const value = await AsyncStorage.getItem('user');
-      const user = JSON.parse(value);
-      setuserLocation({
-        latitude: user.lat,
-        longitude: user.lon,
-      });
-      mapRef.current.fitToSuppliedMarkers(['origin', 'destination'], {
-        edgePadding: {top: 50, right: 50, left: 50, bottom: 50},
-      });
-      console.log(userLocation.lat);
-    };
+    startTrackingLocation();
 
-    getUserLocation();
+    return () => {
+      stopTrackingLocation();
+    };
   }, []);
 
   useEffect(() => {
-    if (!userLocation) return;
-    mapRef.current.fitToSuppliedMarkers(['origin', 'destination'], {
-      edgePadding: {top: 50, right: 50, left: 50, bottom: 50},
-    });
+    if (mapRef.current && userLocation) {
+      const origin = {
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+      };
+      const destination = {
+        latitude: 33.560487,
+        longitude: -7.697092,
+      };
+
+      const coordinates = [origin, destination];
+      try {
+        mapRef.current.fitToCoordinates(coordinates, {
+          edgePadding: {top: 50, right: 50, left: 50, bottom: 50},
+          animated: true, // You can enable animation if desired
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
   }, [userLocation]);
 
-  const destination = {latitude: 33.560487, longitude: -7.697092};
   return (
     <>
       {userLocation ? (
         <View className="flex h-full w-full">
           <MapView
             ref={mapRef}
-            className="absolute top-0 left-0 right-0 bottom-0  rounded"
+            className="absolute top-0 left-0 right-0 bottom-0 "
             region={{
               latitude: userLocation.latitude,
               longitude: userLocation.longitude,
@@ -63,14 +100,44 @@ const Parking = props => {
                 }}
               />
             )}
-            <Marker
-              identifier="destination"
-              coordinate={{
-                latitude: destination.latitude,
-                longitude: destination.longitude,
-              }}
-            />
+            {destination && (
+              <Marker
+                identifier="destination"
+                coordinate={{
+                  latitude: destination.latitude,
+                  longitude: destination.longitude,
+                }}
+              />
+            )}
           </MapView>
+          <View className="absolute flex flex-row rounded-lg  bg-white h-32 left-4 right-4 bottom-6">
+            <View className=" pt-2 flex-5">
+              <Text className="pl-4 font-semibold  text-black text-xl">
+                Parking Name
+              </Text>
+              <Text className="px-4 font-semibold text-gray-600 text-md">
+                hay hassani casablanca
+              </Text>
+              <View className="pl-4 flex flex-row mb-1 ">
+                <Text className=" text-[#0073F9] font-semibold text-md">
+                  2.5km . $3.00/h
+                </Text>
+              </View>
+              <View className="flex  items-end justify-center">
+                <TouchableOpacity
+                  onPress={() => {}}
+                  className="bg-[#0073F9] flex items-center rounded-lg justify-center h-8 w-24">
+                  <Text className=" text-white font-semibold text-md">Pay</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View className="flex-1 flex items-center justify-center">
+              <Image
+                className="h-24 w-24 rounded"
+                source={require('../assets/parking.jpg')}
+              />
+            </View>
+          </View>
         </View>
       ) : (
         <></>

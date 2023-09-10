@@ -20,6 +20,7 @@ import ParkingCard from '../components/ParkingCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 import Geocoder from 'react-native-geocoding';
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 const Home = ({navigation}) => {
   const [selected, setselected] = useState(1);
   const [user, setUser] = useState(null);
@@ -36,7 +37,7 @@ const Home = ({navigation}) => {
     <>
       {user ? (
         <View className="bg-white h-full w-full">
-          <View className="h-2/5 bg-[#0e111f] flex">
+          <View className="h-2/5 bg-[#0e111f] visible flex">
             <View className="flex ml-3 flex-row flex-1">
               <View className="flex-1 pt-2">
                 <TouchableOpacity className="flex flex-row  items-center">
@@ -64,17 +65,53 @@ const Home = ({navigation}) => {
                 Let's find the best parking space
               </Text>
             </View>
-            <View className="flex flex-1 ">
-              <View className="border-2 border-gray-400 rounded w-[80%] h-[50%] mx-auto flex items-center flex-row">
-                <TextInput
-                  className=" h-full w-[80%] p-3"
-                  placeholder="Find Parking Area..."
-                  value=""
-                />
-                <View className="flex-1 flex justify-center items-center">
-                  <MagnifyingGlassIcon size={25} color="white" />
-                </View>
-              </View>
+            <View className="flex flex-1 items-center visible">
+              <GooglePlacesAutocomplete
+                placeholder="Search"
+                textInputProps={{
+                  placeholderTextColor: '#333',
+                  returnKeyType: 'search',
+                }}
+                styles={{
+                  container: {
+                    // position: 'absolute',
+                    flex: 1,
+                    width: '80%',
+                    height: '100%',
+                    marginVertical: 'auto',
+                    overflow: 'visible',
+                  },
+                  description: {
+                    color: 'black',
+                    fontSize: 18,
+                  },
+                  textInputContainer: {
+                    color: 'black',
+                  },
+                  predefinedPlacesDescription: {
+                    color: '#1faadb',
+                  },
+                  listView: {
+                    color: 'black',
+                  },
+                  textInput: {
+                    fontSize: 18,
+                    color: 'black',
+                  },
+                }}
+                // className="border-2 border-gray-400 rounded w-[80%] h-[50%] mx-auto flex items-center flex-row"
+                onPress={(data, details = null) => {
+                  // 'details' is provided when fetchDetails = true
+                  console.log(data.description);
+                }}
+                fetchDetails={true}
+                query={{
+                  key: 'AIzaSyBUDF9iyMau1IH76K7z2KVbwIPQbrpNTT0',
+                  language: 'en',
+                }}
+                debounce={400}
+                // currentLocation={true}
+              />
             </View>
           </View>
           <View className="h-1/5 bg-white">

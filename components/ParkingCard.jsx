@@ -22,7 +22,7 @@ const ParkingCard = ({navigation}) => {
       className=" w-56 h-48  px-4 mr-4 pt-1 rounded-lg  relative flex bg-white overflow-hidden">
       <View className="flex flex-row justify-between">
         <Text className=" text-black font-semibold text-lg mr-1">
-          Your Location
+          Parking name
         </Text>
         <TouchableOpacity className="flex flex-row  items-center">
           <ChevronRightIcon size={20} color="black" />
