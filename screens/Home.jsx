@@ -16,22 +16,63 @@ import {
   MagnifyingGlassIcon,
 } from 'react-native-heroicons/outline';
 import {MapPinIcon} from 'react-native-heroicons/solid';
+import axios from 'axios';
 import ParkingCard from '../components/ParkingCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 import Geocoder from 'react-native-geocoding';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 const Home = ({navigation}) => {
-  const [selected, setselected] = useState(1);
+  const [selected, setselected] = useState(-1);
   const [user, setUser] = useState(null);
+  const [parkings, setparkings] = useState([]);
+  const [vehicule, setvehicule] = useState(null);
+  const [addr, setaddr] = useState(null);
+
+  const getParkings = async () => {
+    if (!addr && !vehicule) {
+      const lo = {
+        lat: user.lat,
+        lon: user.lon,
+      };
+      axios
+        .get('http://192.168.11.101:8080/api/v1/parking/nearest', {params: lo})
+        .then(function (response) {
+          setparkings(response.data);
+        })
+        .catch(function (error) {
+          // handle error
+          console.error(error.message);
+        });
+    } else {
+      axios
+        .get('http://192.168.11.101:8080/api/v1/parking/filter', {
+          params: {
+            addr,
+            vehicule,
+          },
+        })
+        .then(function (response) {
+          setparkings(response.data);
+        })
+        .catch(function (error) {
+          // handle error
+          console.error(error.message);
+        });
+    }
+  };
   useEffect(() => {
     const getuser = async () => {
       const v = await AsyncStorage.getItem('user');
       const u = JSON.parse(v);
       setUser(u);
     };
+
     getuser();
   }, []);
+  useEffect(() => {
+    getParkings();
+  }, [user, addr, vehicule]);
 
   return (
     <>
@@ -102,7 +143,7 @@ const Home = ({navigation}) => {
                 // className="border-2 border-gray-400 rounded w-[80%] h-[50%] mx-auto flex items-center flex-row"
                 onPress={(data, details = null) => {
                   // 'details' is provided when fetchDetails = true
-                  console.log(data.description);
+                  setaddr(details.address_components[0].long_name);
                 }}
                 fetchDetails={true}
                 query={{
@@ -123,11 +164,16 @@ const Home = ({navigation}) => {
                 contentContainerStyle={{paddingHorizontal: 15, paddingTop: 10}}
                 horizontal
                 showsHorizontalScrollIndicator={false}>
-                {[1, 2, 3, 4, 5, 6, 8].map(index => (
+                {['CAR', 'MOTO', 'TRACK', 'BIKE'].map((value, index) => (
                   <TouchableOpacity
                     onPress={() => {
-                      console.log(index);
-                      setselected(index);
+                      if (selected === index) {
+                        setselected(-1);
+                        setvehicule(null);
+                      } else {
+                        setselected(index);
+                        setvehicule(value);
+                      }
                     }}
                     key={index}
                     className={`"w-20 h-24 px-2 mr-4 rounded-lg flex justify-center align-middle items-center bg-gray-100 ${
@@ -138,7 +184,7 @@ const Home = ({navigation}) => {
                       source={require('../assets/car.png')}
                       resizeMode={'contain'}
                     />
-                    <Text className="text-black mt-[-10px]">Car</Text>
+                    <Text className="text-black mt-[-10px]">{value}</Text>
                   </TouchableOpacity>
                 ))}
               </ScrollView>
@@ -150,8 +196,12 @@ const Home = ({navigation}) => {
               contentContainerStyle={{paddingHorizontal: 15, paddingTop: 10}}
               horizontal
               showsHorizontalScrollIndicator={false}>
-              {[1, 2, 3, 4, 5, 6, 8].map(index => (
-                <ParkingCard navigation={navigation} key={index} />
+              {parkings.map(parking => (
+                <ParkingCard
+                  navigation={navigation}
+                  key={parking.id}
+                  parking={parking}
+                />
               ))}
             </ScrollView>
           </View>

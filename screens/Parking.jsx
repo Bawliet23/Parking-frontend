@@ -10,6 +10,7 @@ import Geolocation from 'react-native-geolocation-service';
 const Parking = props => {
   const [userLocation, setuserLocation] = useState(null);
   const mapRef = useRef(null);
+  let id = null;
   const [destination, setdestination] = useState({
     latitude: 33.560487,
     longitude: -7.697092,
@@ -23,54 +24,39 @@ const Parking = props => {
   };
 
   const stopTrackingLocation = () => {
-    Geolocation.clearWatch();
+    console.log('stop ' + id);
+    Geolocation.clearWatch(id);
   };
 
   const startTrackingLocation = () => {
-    Geolocation.watchPosition(
+    console.log(' insde');
+    id = Geolocation.watchPosition(
       position => {
         const {latitude, longitude} = position.coords;
+        console.log('innside start tracking');
+        console.log(position);
         setuserLocation({latitude, longitude});
       },
       error => {
         console.error('Location error:', error);
       },
       {
-        enableHighAccuracy: true,
         distanceFilter: 10,
+        enableHighAccuracy: true,
+        timeout: 150,
+        maximumAge: 10000,
       },
     );
+    console.log('id : ' + id);
   };
   useEffect(() => {
     startTrackingLocation();
+    console.log('All my friends are alive');
 
     return () => {
       stopTrackingLocation();
     };
   }, []);
-
-  useEffect(() => {
-    if (mapRef.current && userLocation) {
-      const origin = {
-        latitude: userLocation.latitude,
-        longitude: userLocation.longitude,
-      };
-      const destination = {
-        latitude: 33.560487,
-        longitude: -7.697092,
-      };
-
-      const coordinates = [origin, destination];
-      try {
-        mapRef.current.fitToCoordinates(coordinates, {
-          edgePadding: {top: 50, right: 50, left: 50, bottom: 50},
-          animated: true, // You can enable animation if desired
-        });
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  }, [userLocation]);
 
   return (
     <>
@@ -90,6 +76,22 @@ const Parking = props => {
               destination={destination}
               strokeWidth={3}
               apikey={'AIzaSyBUDF9iyMau1IH76K7z2KVbwIPQbrpNTT0'}
+              onReady={result => {
+                const origin = {
+                  latitude: userLocation.latitude,
+                  longitude: userLocation.longitude,
+                };
+                const destination = {
+                  latitude: 33.560487,
+                  longitude: -7.697092,
+                };
+
+                const coordinates = [origin, destination];
+                mapRef.current.fitToCoordinates(coordinates, {
+                  edgePadding: {top: 50, right: 50, left: 50, bottom: 100},
+                  animated: true, // You can enable animation if desired
+                });
+              }}
             />
             {userLocation && (
               <Marker

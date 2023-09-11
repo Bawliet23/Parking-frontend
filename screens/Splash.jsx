@@ -12,7 +12,8 @@ const Splash = ({navigation}) => {
       try {
         const v = await AsyncStorage.getItem('user');
         const value = JSON.parse(v);
-        if (value.name !== undefined) {
+        console.log(value);
+        if (value !== null) {
           navigation.navigate('Tabs');
         } else {
           getLocation().then(() => navigation.navigate('Login'));

@@ -20,24 +20,10 @@ const Login = ({navigation}) => {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
 
   const loginButton = async () => {
-    console.log(password + ' ' + email);
     if (!password || !email) return;
     try {
-      // axios
-      //   .get('http://192.168.11.101:8080/api/v1/user/parking/2')
-      //   .then(function (response) {
-      //     // handle success
-      //     console.log(response);
-      //   })
-      //   .catch(function (error) {
-      //     // handle error
-      //     console.error(error.message);
-      //   })
-      //   .finally(function () {
-      //     // always executed
-      //   });
       const {data} = await axios.post(
-        'http://192.168.11.103:8080/api/v1/user/signIn',
+        'http://192.168.11.101:8080/api/v1/user/signIn',
         {
           email: email,
           password: password,
