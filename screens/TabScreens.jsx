@@ -12,6 +12,7 @@ import {
 import Discovery from './Parking';
 import Home from './Home';
 import Parking from './Parking';
+import Details from './Details';
 
 const TabScreens = () => {
   const Tab = createBottomTabNavigator();
@@ -36,7 +37,7 @@ const TabScreens = () => {
 
       <Tab.Screen
         name="Tickets"
-        component={Parking}
+        component={Details}
         options={{
           title: 'Tickets',
           tabBarIcon: () => <TicketIcon size={20} color="blue" />,

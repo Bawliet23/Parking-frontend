@@ -17,7 +17,7 @@ const ParkingCard = ({navigation, parking}) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('Parking');
+        navigation.navigate('Parking', {parking});
       }}
       className=" w-56 h-48  px-4 mr-4 pt-1 rounded-lg  relative flex bg-white overflow-hidden">
       <View className="flex flex-row justify-between">
