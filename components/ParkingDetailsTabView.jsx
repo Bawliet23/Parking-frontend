@@ -19,8 +19,6 @@ const ParkingDetailsTabView = ({parkingInfo, images}) => {
     {key: 'info', title: 'Information'},
     {key: 'images', title: 'Images'},
   ]);
-  console.log(parkingInfo);
-  console.log(images);
 
   const FirstRoute = () => <ParkingInfo info={parkingInfo} />;
 

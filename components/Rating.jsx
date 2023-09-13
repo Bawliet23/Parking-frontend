@@ -43,12 +43,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   star: {
-    marginHorizontal: 1,
+    marginHorizontal: 0,
   },
   ratingText: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginTop: 10,
+    marginTop: 0,
   },
 });
 

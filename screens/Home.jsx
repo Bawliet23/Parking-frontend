@@ -36,7 +36,7 @@ const Home = ({navigation}) => {
         lon: user.lon,
       };
       axios
-        .get('http://192.168.11.101:8080/api/v1/parking/nearest', {params: lo})
+        .get('http://192.168.11.103:8080/api/v1/parking/nearest', {params: lo})
         .then(function (response) {
           setparkings(response.data);
         })
