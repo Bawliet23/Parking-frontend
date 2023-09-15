@@ -17,7 +17,7 @@ const ParkingCard = ({navigation, parking}) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('Parking', {parking});
+        navigation.navigate('ParkingDetail', {parking});
       }}
       className=" w-56 h-48  px-4 mr-4 pt-1 rounded-lg  relative flex bg-white overflow-hidden">
       <View className="flex flex-row justify-between">
@@ -33,7 +33,7 @@ const ParkingCard = ({navigation, parking}) => {
           {parking.distance.toFixed(2)}km . ${parking.price.toFixed(2)}/h
         </Text>
       </View>
-      <View className="relative bg-red-500 w-full h-32 rounded overflow-hidden mb-4">
+      <View className="relative w-full h-32 rounded overflow-hidden mb-4">
         <MapView
           className="absolute top-0 left-0 right-0 bottom-0  rounded"
           region={{

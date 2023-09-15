@@ -13,6 +13,7 @@ import Discovery from './Parking';
 import Home from './Home';
 import Parking from './Parking';
 import Details from './Details';
+import Profile from './Profile';
 
 const TabScreens = () => {
   const Tab = createBottomTabNavigator();
@@ -55,7 +56,7 @@ const TabScreens = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={Parking}
+        component={Profile}
         options={{
           title: 'Profile',
           tabBarIcon: () => <UserIcon size={20} color="blue" />,

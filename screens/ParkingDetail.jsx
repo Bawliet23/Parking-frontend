@@ -36,6 +36,8 @@ import ParkingDetailsTabView from '../components/ParkingDetailsTabView';
 import DatePicker from 'react-native-date-picker';
 import ParkingInfo from '../components/ParkingInfo';
 import MapView, {Marker} from 'react-native-maps';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const ParkingDetails = () => {
   const navigation = useNavigation();
@@ -43,15 +45,46 @@ const ParkingDetails = () => {
   const [checkOut, setCheckOut] = useState(new Date());
   const [open, setOpen] = useState(false);
   const [open1, setOpen1] = useState(false);
+  const [user, setuser] = useState();
 
   const [isLoding, setisLoding] = useState(true);
 
-  const [startDateTime, setStartDateTime] = useState('');
-  const [checkoutDateTime, setCheckoutDateTime] = useState('');
-
   const handleReservation = () => {
+    const timeDifferenceMs = checkOut.getTime() - checkIn.getTime();
+
+    const hoursDifference = timeDifferenceMs / (1000 * 60 * 60);
+
+    const totalPrice = hoursDifference * parking.price;
+
     console.log('Start Date and Time:', checkIn);
     console.log('Checkout Date and Time:', checkOut);
+    console.log('Total Price:', totalPrice.toFixed(2));
+    const requestData = {
+      userId: user.id,
+      parkingId: parking.id,
+      startTime: checkIn,
+      endTime: checkOut,
+      price: totalPrice,
+    };
+    console.log(requestData);
+    const headers = {
+      'Content-Type': 'application/json', // Set the content type to JSON
+    };
+
+    // Define the API endpoint URL
+    const apiUrl = `http://192.168.11.103:8080/api/v1/parking/reserve`; // Replace with your actual API URL
+
+    // Make the POST request
+    axios
+      .post(apiUrl, null, {params: requestData})
+      .then(response => {
+        // Handle the success response here
+        console.log('Reservation created successfully:', response.data);
+      })
+      .catch(error => {
+        // Handle any errors here
+        console.error('Error creating reservation:', error);
+      });
   };
 
   const options = {
@@ -61,11 +94,6 @@ const ParkingDetails = () => {
     minute: '2-digit', // Display the minute as a two-digit number (e.g., 00)
     hour12: false, // Use 12-hour format (e.g., am/pm)
   };
-  const images = [
-    'https://webbox.imgix.net/images/fkasnjcmlhnbwpkv/ac1975e4-f8ee-4b5c-b76d-321325562de3.jpg?auto=format,compress&fit=crop&crop=entropy',
-    'https://www.magnetic-access.com/files/data/sectors/parking/Parken_1280x989px.jpg',
-    'https://www.magnetic-access.com/files/data/sectors/parking/Parken_1280x989px.jpg',
-  ];
 
   const {
     params: {parking},
@@ -78,7 +106,13 @@ const ParkingDetails = () => {
   }, []);
 
   useEffect(() => {
-    setisLoding(false);
+    const getuser = async () => {
+      const v = await AsyncStorage.getItem('user');
+      const u = JSON.parse(v);
+      setuser(u);
+    };
+
+    getuser().then(() => setisLoding(false));
   }, []);
 
   return (
@@ -86,7 +120,12 @@ const ParkingDetails = () => {
       {isLoding ? (
         <ActivityIndicator size="large" />
       ) : (
-        <View className="h-72">
+        <View className="relative h-72">
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            className="absolute top-10 left-4 z-10 bg-[#020C24]  p-2 rounded-xl">
+            <ArrowLeftIcon size={20} color="white" />
+          </TouchableOpacity>
           <Image
             source={require('../assets/parking.jpg')}
             className="w-full h-72 bg-gray-300 p-4 "
@@ -120,7 +159,7 @@ const ParkingDetails = () => {
             </View>
             <View className="flex flex-row items-center justify-center w-full mt-4">
               <TouchableOpacity
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Parking', {parking})}
                 className="w-28 h-14 flex-row py-4 px-2 mr-4 rounded-xl flex justify-around align-middle items-center bg-gray-100 ">
                 <MapPinIcon size={25} color="black" />
                 <Text className="text-black ">Directions</Text>

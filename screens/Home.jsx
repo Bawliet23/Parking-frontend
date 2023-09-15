@@ -9,7 +9,7 @@ import {
   Image,
   StyleSheet,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   BellAlertIcon,
   ChevronDownIcon,
@@ -28,7 +28,7 @@ const Home = ({navigation}) => {
   const [parkings, setparkings] = useState([]);
   const [vehicule, setvehicule] = useState(null);
   const [addr, setaddr] = useState(null);
-
+  const placesAutocompleteRef = useRef(null);
   const getParkings = async () => {
     if (!addr && !vehicule) {
       const lo = {
@@ -39,14 +39,16 @@ const Home = ({navigation}) => {
         .get('http://192.168.11.103:8080/api/v1/parking/nearest', {params: lo})
         .then(function (response) {
           setparkings(response.data);
+          console.log('wa khadmi');
         })
         .catch(function (error) {
-          // handle error
           console.error(error.message);
         });
+      placesAutocompleteRef.current?.setAddressText(''); // Clear the input value
+      placesAutocompleteRef.current?.blur();
     } else {
       axios
-        .get('http://192.168.11.101:8080/api/v1/parking/filter', {
+        .get('http://192.168.11.103:8080/api/v1/parking/filter', {
           params: {
             addr,
             vehicule,
@@ -56,7 +58,6 @@ const Home = ({navigation}) => {
           setparkings(response.data);
         })
         .catch(function (error) {
-          // handle error
           console.error(error.message);
         });
     }
@@ -108,11 +109,30 @@ const Home = ({navigation}) => {
             </View>
             <View className="flex flex-1 items-center visible">
               <GooglePlacesAutocomplete
+                ref={placesAutocompleteRef}
                 placeholder="Search"
                 textInputProps={{
                   placeholderTextColor: '#333',
                   returnKeyType: 'search',
                 }}
+                returnKeyType={'search'}
+                renderTextInput={props => (
+                  <TextInput
+                    {...props}
+                    onBlur={() => {
+                      // Handle onBlur event here
+                      console.log('Input field blurred');
+                      // You can perform any additional actions you need when the input field blurs
+                    }}
+                  />
+                )}
+                onFail={error => console.log(error)}
+                onNotFound={() => console.log('no results')}
+                listEmptyComponent={() => (
+                  <View style={{flex: 1}}>
+                    <Text>No results were found</Text>
+                  </View>
+                )}
                 styles={{
                   container: {
                     // position: 'absolute',
@@ -143,6 +163,7 @@ const Home = ({navigation}) => {
                 // className="border-2 border-gray-400 rounded w-[80%] h-[50%] mx-auto flex items-center flex-row"
                 onPress={(data, details = null) => {
                   // 'details' is provided when fetchDetails = true
+                  console.log(details.address_components[0].long_name);
                   setaddr(details.address_components[0].long_name);
                 }}
                 fetchDetails={true}
