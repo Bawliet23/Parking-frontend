@@ -36,7 +36,7 @@ const Home = ({navigation}) => {
         lon: user.lon,
       };
       axios
-        .get('http://192.168.11.103:8080/api/v1/parking/nearest', {params: lo})
+        .get('http://192.168.11.164:8080/api/v1/parking/nearest', {params: lo})
         .then(function (response) {
           setparkings(response.data);
           console.log('wa khadmi');
@@ -48,7 +48,7 @@ const Home = ({navigation}) => {
       placesAutocompleteRef.current?.blur();
     } else {
       axios
-        .get('http://192.168.11.103:8080/api/v1/parking/filter', {
+        .get('http://192.168.11.164:8080/api/v1/parking/filter', {
           params: {
             addr,
             vehicule,

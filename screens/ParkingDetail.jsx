@@ -56,9 +56,6 @@ const ParkingDetails = () => {
 
     const totalPrice = hoursDifference * parking.price;
 
-    console.log('Start Date and Time:', checkIn);
-    console.log('Checkout Date and Time:', checkOut);
-    console.log('Total Price:', totalPrice.toFixed(2));
     const requestData = {
       userId: user.id,
       parkingId: parking.id,
@@ -68,28 +65,24 @@ const ParkingDetails = () => {
     };
     console.log(requestData);
     const headers = {
-      'Content-Type': 'application/json', // Set the content type to JSON
+      'Content-Type': 'application/json',
     };
 
-    // Define the API endpoint URL
-    const apiUrl = `http://192.168.11.103:8080/api/v1/parking/reserve`; // Replace with your actual API URL
+    const apiUrl = `http://192.168.11.103:8080/api/v1/parking/reserve`;
 
-    // Make the POST request
     axios
       .post(apiUrl, null, {params: requestData})
       .then(response => {
-        // Handle the success response here
         console.log('Reservation created successfully:', response.data);
       })
       .catch(error => {
-        // Handle any errors here
         console.error('Error creating reservation:', error);
       });
   };
 
   const options = {
-    weekday: 'short', // Display the short weekday name (e.g., Wed)
-    day: '2-digit', // Display the day as a two-digit number (e.g., 13)
+    weekday: 'short',
+    day: '2-digit',
     hour: '2-digit', // Display the hour as a two-digit number (e.g., 02)
     minute: '2-digit', // Display the minute as a two-digit number (e.g., 00)
     hour12: false, // Use 12-hour format (e.g., am/pm)

@@ -14,6 +14,7 @@ import Home from './Home';
 import Parking from './Parking';
 import Details from './Details';
 import Profile from './Profile';
+import Reservation from './Reservation';
 
 const TabScreens = () => {
   const Tab = createBottomTabNavigator();
@@ -38,11 +39,12 @@ const TabScreens = () => {
 
       <Tab.Screen
         name="Tickets"
-        component={Details}
+        component={Reservation}
         options={{
           title: 'Tickets',
           tabBarIcon: () => <TicketIcon size={20} color="blue" />,
-          tabBarShowLabel: false,
+          tabBarShowLabel: true,
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen
