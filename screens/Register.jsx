@@ -39,7 +39,7 @@ const Register = ({navigation}) => {
     if (!password || !email) return;
     try {
       const {data} = await axios.post(
-        'http://192.168.11.231:8080/api/v1/user/signUp',
+        'http://192.168.11.103:8080/api/v1/user/signUp',
         {
           name,
           email,

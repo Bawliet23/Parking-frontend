@@ -27,7 +27,7 @@ const Reservation = ({navigation}) => {
     };
 
     getuser().then(u => {
-      const apiUrl = `http://192.168.11.164:8080/api/v1/user/${u.id}/reservations`;
+      const apiUrl = `http://192.168.11.169:8080/api/v1/user/${u.id}/reservations`;
       console.log(apiUrl);
       axios
         .get(apiUrl)

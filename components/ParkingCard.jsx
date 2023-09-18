@@ -36,6 +36,7 @@ const ParkingCard = ({navigation, parking}) => {
       <View className="relative w-full h-32 rounded overflow-hidden mb-4">
         <MapView
           className="absolute top-0 left-0 right-0 bottom-0  rounded"
+          enableP
           region={{
             latitude: parking.lat,
             longitude: parking.lon,

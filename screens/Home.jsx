@@ -19,9 +19,10 @@ import {MapPinIcon} from 'react-native-heroicons/solid';
 import axios from 'axios';
 import ParkingCard from '../components/ParkingCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Geolocation from 'react-native-geolocation-service';
-import Geocoder from 'react-native-geocoding';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import Notification from '../components/Notification';
+import {weekdays} from 'moment';
+
 const Home = ({navigation}) => {
   const [selected, setselected] = useState(-1);
   const [user, setUser] = useState(null);
@@ -29,6 +30,16 @@ const Home = ({navigation}) => {
   const [vehicule, setvehicule] = useState(null);
   const [addr, setaddr] = useState(null);
   const placesAutocompleteRef = useRef(null);
+  var ws = React.useRef(new WebSocket('ws://192.168.11.169:8080/ws')).current;
+  const [notifications, setNotifications] = useState([
+    'hello to our amazin app',
+  ]);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications);
+  };
+
   const getParkings = async () => {
     if (!addr && !vehicule) {
       const lo = {
@@ -36,7 +47,7 @@ const Home = ({navigation}) => {
         lon: user.lon,
       };
       axios
-        .get('http://192.168.11.164:8080/api/v1/parking/nearest', {params: lo})
+        .get('http://192.168.11.169:8080/api/v1/parking/nearest', {params: lo})
         .then(function (response) {
           setparkings(response.data);
           console.log('wa khadmi');
@@ -48,7 +59,7 @@ const Home = ({navigation}) => {
       placesAutocompleteRef.current?.blur();
     } else {
       axios
-        .get('http://192.168.11.164:8080/api/v1/parking/filter', {
+        .get('http://192.168.11.169:8080/api/v1/parking/filter', {
           params: {
             addr,
             vehicule,
@@ -68,9 +79,40 @@ const Home = ({navigation}) => {
       const u = JSON.parse(v);
       setUser(u);
     };
-
     getuser();
   }, []);
+
+  useEffect(() => {
+    // const ws = new WebSocket('ws://192.168.11.169:8080/ws');
+    console.log('anbiyan websocket');
+    console.log(ws);
+    ws.onopen = () => {
+      // connection opened
+      ws.send('something'); // send a message
+    };
+
+    ws.onmessage = e => {
+      // a message was received
+      console.log(e.data);
+    };
+
+    ws.onerror = e => {
+      // an error occurred
+      console.log(e.message);
+    };
+
+    ws.onclose = e => {
+      // connection closed
+      console.log(e.code, e.reason);
+    };
+
+    return () => {
+      if (ws) {
+        ws.close();
+      }
+    };
+  }, []);
+
   useEffect(() => {
     getParkings();
   }, [user, addr, vehicule]);
@@ -82,7 +124,7 @@ const Home = ({navigation}) => {
           <View className="h-2/5 bg-[#0e111f] visible flex">
             <View className="flex ml-3 flex-row flex-1">
               <View className="flex-1 pt-2">
-                <TouchableOpacity className="flex flex-row  items-center">
+                <TouchableOpacity className="flex flex-row   items-center">
                   <Text className="text-gray-500 text-lg mr-1">
                     Your Location
                   </Text>
@@ -94,7 +136,9 @@ const Home = ({navigation}) => {
                 </View>
               </View>
               <View className="w-20 relative">
-                <TouchableOpacity className="h-10 flex justify-center items-center w-10 m-auto border-[1px] border-gray-400 rounded relative">
+                <TouchableOpacity
+                  onPress={toggleNotifications}
+                  className="h-10 flex justify-center items-center w-10 m-auto border-[1px] border-gray-400 rounded relative">
                   <Text className="absolute bg-red-500 rounded-full w-[20px] h-[20px] text-[12px] p-[2px] right-[-10px] text-center top-[-10px]">
                     3
                   </Text>
@@ -226,6 +270,10 @@ const Home = ({navigation}) => {
               ))}
             </ScrollView>
           </View>
+          <Notification
+            isVisible={showNotifications}
+            notifications={notifications}
+          />
         </View>
       ) : (
         <></>

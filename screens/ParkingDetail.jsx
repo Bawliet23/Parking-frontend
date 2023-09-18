@@ -68,7 +68,7 @@ const ParkingDetails = () => {
       'Content-Type': 'application/json',
     };
 
-    const apiUrl = `http://192.168.11.103:8080/api/v1/parking/reserve`;
+    const apiUrl = `http://192.168.11.169:8080/api/v1/parking/reserve`;
 
     axios
       .post(apiUrl, null, {params: requestData})
