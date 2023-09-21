@@ -43,13 +43,13 @@ const TabScreens = () => {
         options={{
           title: 'Tickets',
           tabBarIcon: () => <TicketIcon size={20} color="blue" />,
-          tabBarShowLabel: true,
+          tabBarShowLabel: false,
           unmountOnBlur: true,
         }}
       />
       <Tab.Screen
         name="Map"
-        component={Parking}
+        component={Details}
         options={{
           title: 'Map',
           tabBarIcon: () => <MapIcon size={20} color="blue" />,

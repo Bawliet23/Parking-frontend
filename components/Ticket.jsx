@@ -112,7 +112,7 @@ const Ticket = ({reservation, user}) => {
           justifyContent: 'space-between',
           padding: -10,
         }}>
-        <View className="bg-cyan-400 ml-3">
+        <View className=" ml-3">
           <QRCode
             value={'not'}
             size={30} // Adjust the size as needed
@@ -130,7 +130,7 @@ const Ticket = ({reservation, user}) => {
               // paddingTop: -10,
               marginRight: 15,
             }}>
-            {reservation.price}$
+            {reservation.price.toFixed(2)}$
           </Text>
         </View>
       </View>

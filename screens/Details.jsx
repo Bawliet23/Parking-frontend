@@ -1,45 +1,39 @@
 /* eslint-disable eslint-comments/no-unlimited-disable */
 /* eslint-disable */
-import {View, Text} from 'react-native';
+import {View, Text, Button, StyleSheet} from 'react-native';
 import React from 'react';
+import PaymentForm from './PaymentForm';
 import LinearGradient from 'react-native-linear-gradient';
-
+import {CardField, useStripe} from '@stripe/stripe-react-native';
 import {
   ArrowLeftIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from 'react-native-heroicons/outline';
-
 import ParkingArea from '../components/ParkingArea';
 const Details = () => {
+  const handlePaymentSuccess = () => {
+    // Handle successful payment (e.g., navigate to a success screen)
+    console.log('Payment successful!');
+  };
+
   return (
-    <View className="w-full h-full bg-[#0e111f] ">
-      <View className=" flex flex-row  h-24   w-full ">
-        <View className=" flex-1  flex justify-center items-center">
-          <View className=" flex justify-center items-center h-10 w-10 border-[#3F4250] rounded border-[1px]">
-            <ArrowLeftIcon size={25} color="white" />
-          </View>
-        </View>
-        <View className=" flex-1 flex align-baseline items-center justify-center ">
-          <Text className="text-white text-xl font-bold">Choose Slot</Text>
-        </View>
-        <View className=" flex-1"></View>
-      </View>
-
-      <View className="w-full h-24 flex flex-row justify-around items-center">
-        <ChevronLeftIcon size={25} color="white" />
-        <View className="flex justify-center align-middle items-center">
-          <Text className="text-white text-3xl font-bold">Floor 1</Text>
-          <Text className=" text-gray-500 text-sm">10 Available</Text>
-        </View>
-
-        <ChevronRightIcon size={25} color="white" />
-      </View>
-      <View className="flex border-x-2 border-white px-3">
-        <ParkingArea />
-      </View>
+    <View style={styles.container}>
+      <Text style={styles.title}>Stripe Payment Example</Text>
+      <PaymentForm onPaymentSuccess={handlePaymentSuccess} />
     </View>
   );
 };
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+});
 export default Details;

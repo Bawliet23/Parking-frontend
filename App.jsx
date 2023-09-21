@@ -14,6 +14,8 @@ import Register from './screens/Register';
 import Splash from './screens/Splash';
 import ParkingDetail from './screens/ParkingDetail';
 
+import {YOUR_STRIPE_PUBLISHABLE_KEY} from '@env';
+import {StripeProvider} from '@stripe/stripe-react-native';
 const App = () => {
   const Stack = createNativeStackNavigator();
   useEffect(() => {
@@ -23,19 +25,21 @@ const App = () => {
   }, []);
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <Stack.Screen name="Splash" component={Splash} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="ParkingDetail" component={ParkingDetail} />
-        <Stack.Screen name="Tabs" component={TabScreens} />
-        <Stack.Screen name="Parking" component={Parking} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <StripeProvider publishableKey={`${YOUR_STRIPE_PUBLISHABLE_KEY}`}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
+            headerShown: false,
+          }}>
+          <Stack.Screen name="Splash" component={Splash} />
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name="ParkingDetail" component={ParkingDetail} />
+          <Stack.Screen name="Tabs" component={TabScreens} />
+          <Stack.Screen name="Parking" component={Parking} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </StripeProvider>
   );
 };
 

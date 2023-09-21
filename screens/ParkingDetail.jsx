@@ -38,7 +38,8 @@ import ParkingInfo from '../components/ParkingInfo';
 import MapView, {Marker} from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-
+import {BACKEND_API} from '@env';
+import {CardField, useStripe} from '@stripe/stripe-react-native';
 const ParkingDetails = () => {
   const navigation = useNavigation();
   const [checkIn, setCheckIn] = useState(new Date());
@@ -48,6 +49,59 @@ const ParkingDetails = () => {
   const [user, setuser] = useState();
 
   const [isLoding, setisLoding] = useState(true);
+
+  const {initPaymentSheet, presentPaymentSheet} = useStripe();
+
+  const fetchPaymentIntentClientSecret = async () => {
+    try {
+      const timeDifferenceMs = checkOut.getTime() - checkIn.getTime();
+
+      const hoursDifference = timeDifferenceMs / (1000 * 60 * 60);
+
+      const totalPrice = hoursDifference * parking.price;
+      const response = await axios.post(
+        `${BACKEND_API}/payments/create-payment-intent`,
+        {
+          amount: totalPrice * 100,
+          currency: 'USD',
+        },
+      );
+
+      const data = response.data;
+      console.log(data);
+      return data;
+    } catch (error) {
+      console.log('payementIntent');
+      console.error(error);
+      throw error; // You can handle the error as needed in your component
+    }
+  };
+  const onCheckOut = async () => {
+    const intent = await fetchPaymentIntentClientSecret();
+    if (intent.error) {
+      Alert.alert('Something went wrong');
+      return;
+    }
+    const initResponse = await initPaymentSheet({
+      merchantDisplayName: 'Parking.dev',
+      paymentIntentClientSecret: intent,
+    });
+    if (initResponse.error) {
+      console.log(initResponse.error);
+      Alert.alert('Something went wrong');
+      return;
+    }
+    const paymentResponse = await presentPaymentSheet();
+
+    if (paymentResponse.error) {
+      Alert.alert(
+        `Error code: ${paymentResponse.error.code}`,
+        paymentResponse.error.message,
+      );
+      return;
+    }
+    handleReservation();
+  };
 
   const handleReservation = () => {
     const timeDifferenceMs = checkOut.getTime() - checkIn.getTime();
@@ -68,12 +122,12 @@ const ParkingDetails = () => {
       'Content-Type': 'application/json',
     };
 
-    const apiUrl = `http://192.168.11.169:8080/api/v1/parking/reserve`;
+    const apiUrl = `${BACKEND_API}/parking/reserve`;
 
     axios
       .post(apiUrl, null, {params: requestData})
       .then(response => {
-        console.log('Reservation created successfully:', response.data);
+        navigation.navigate('/Home');
       })
       .catch(error => {
         console.error('Error creating reservation:', error);
@@ -214,7 +268,7 @@ const ParkingDetails = () => {
               </View>
             </View>
             <TouchableOpacity
-              onPress={handleReservation}
+              onPress={onCheckOut}
               className="mx-4 w-88 h-12 rounded-lg mb-1 flex justify-center items-center bg-[#0e111f]">
               <Text style={styles.reserveButtonText}>Reserve Parking</Text>
             </TouchableOpacity>
@@ -235,6 +289,14 @@ const ParkingDetails = () => {
               </MapView>
             </View>
           </View>
+          <CardField
+            postalCodeEnabled={false}
+            placeholder={{
+              number: 'Card Number',
+              expiration: 'MM/YY',
+              cvc: 'CVC',
+            }}
+          />
         </View>
       )}
     </SafeAreaView>

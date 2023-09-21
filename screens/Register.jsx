@@ -13,6 +13,7 @@ import React, {useState, useEffect} from 'react';
 import {EyeIcon, EyeSlashIcon} from 'react-native-heroicons/outline';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BACKEND_API} from '@env';
 
 const Register = ({navigation}) => {
   const [email, setemail] = useState('');
@@ -39,7 +40,7 @@ const Register = ({navigation}) => {
     if (!password || !email) return;
     try {
       const {data} = await axios.post(
-        'http://192.168.11.103:8080/api/v1/user/signUp',
+        `${BACKEND_API}/user/signUp`,
         {
           name,
           email,

@@ -13,6 +13,7 @@ import React, {useState} from 'react';
 import {EyeIcon, EyeSlashIcon} from 'react-native-heroicons/outline';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {BACKEND_API} from '@env';
 
 const Login = ({navigation}) => {
   const [email, setemail] = useState('');
@@ -23,7 +24,7 @@ const Login = ({navigation}) => {
     if (!password || !email) return;
     try {
       const {data} = await axios.post(
-        'http://192.168.11.103:8080/api/v1/user/signIn',
+        `${BACKEND_API}/user/signIn`,
         {
           email: email,
           password: password,

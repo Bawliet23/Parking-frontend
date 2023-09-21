@@ -12,7 +12,7 @@ import Ticket from '../components/Ticket';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ArrowLeftIcon} from 'react-native-heroicons/outline';
-
+import {BACKEND_API} from '@env';
 const Reservation = ({navigation}) => {
   const [user, setUser] = useState();
   const [isLoading, setisLoading] = useState(true);
@@ -27,7 +27,7 @@ const Reservation = ({navigation}) => {
     };
 
     getuser().then(u => {
-      const apiUrl = `http://192.168.11.169:8080/api/v1/user/${u.id}/reservations`;
+      const apiUrl = `${BACKEND_API}/user/${u.id}/reservations`;
       console.log(apiUrl);
       axios
         .get(apiUrl)

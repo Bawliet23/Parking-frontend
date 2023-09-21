@@ -5,7 +5,6 @@ import React, {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Geolocation from 'react-native-geolocation-service';
 import Geocoder from 'react-native-geocoding';
-import {get} from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 const Splash = ({navigation}) => {
   useEffect(() => {
     const getData = async () => {

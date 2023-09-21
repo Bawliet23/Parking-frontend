@@ -21,7 +21,8 @@ import ParkingCard from '../components/ParkingCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Notification from '../components/Notification';
-import {weekdays} from 'moment';
+
+import {BACKEND_API, WS_URL} from '@env';
 
 const Home = ({navigation}) => {
   const [selected, setselected] = useState(-1);
@@ -30,7 +31,7 @@ const Home = ({navigation}) => {
   const [vehicule, setvehicule] = useState(null);
   const [addr, setaddr] = useState(null);
   const placesAutocompleteRef = useRef(null);
-  var ws = React.useRef(new WebSocket('ws://192.168.11.169:8080/ws')).current;
+  var ws = React.useRef(new WebSocket(`${WS_URL}`)).current;
   const [notifications, setNotifications] = useState([
     'hello to our amazin app',
   ]);
@@ -47,10 +48,9 @@ const Home = ({navigation}) => {
         lon: user.lon,
       };
       axios
-        .get('http://192.168.11.169:8080/api/v1/parking/nearest', {params: lo})
+        .get(`${BACKEND_API}/parking/nearest`, {params: lo})
         .then(function (response) {
           setparkings(response.data);
-          console.log('wa khadmi');
         })
         .catch(function (error) {
           console.error(error.message);
@@ -59,7 +59,7 @@ const Home = ({navigation}) => {
       placesAutocompleteRef.current?.blur();
     } else {
       axios
-        .get('http://192.168.11.169:8080/api/v1/parking/filter', {
+        .get(`${BACKEND_API}/parking/filter`, {
           params: {
             addr,
             vehicule,
@@ -83,12 +83,19 @@ const Home = ({navigation}) => {
   }, []);
 
   useEffect(() => {
-    // const ws = new WebSocket('ws://192.168.11.169:8080/ws');
-    console.log('anbiyan websocket');
     console.log(ws);
+    const subscriptionMessage = {
+      destination: '/notification',
+      action: 'subscribe',
+    };
+    ws.addEventListener('open', event => {
+      console.log('addEventListener');
+      ws.send(JSON.stringify(subscriptionMessage));
+    });
     ws.onopen = () => {
       // connection opened
-      ws.send('something'); // send a message
+      console.log('onOpen');
+      ws.send(JSON.stringify(subscriptionMessage));
     };
 
     ws.onmessage = e => {

@@ -1,6 +1,7 @@
-module.exports = {
-  presets: ['module:metro-react-native-babel-preset'],
-  plugins: [
+module.exports = api => {
+  api.cache(false);
+  const presets = ['module:metro-react-native-babel-preset'];
+  const plugins = [
     'nativewind/babel',
     [
       'module:react-native-dotenv',
@@ -9,5 +10,9 @@ module.exports = {
         path: '.env',
       },
     ],
-  ],
+  ];
+  return {
+    presets,
+    plugins,
+  };
 };
