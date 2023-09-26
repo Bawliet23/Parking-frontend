@@ -2,13 +2,12 @@
 /* eslint-disable */
 import {View, Text, Image, TouchableOpacity} from 'react-native';
 
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef, useLayoutEffect} from 'react';
 import MapView, {Marker} from 'react-native-maps';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MapViewDirections from 'react-native-maps-directions';
 import Geolocation from 'react-native-geolocation-service';
-
-
+import {err} from 'react-native-svg/lib/typescript/xml';
 
 const Parking = ({route, navigation}) => {
   const [userLocation, setuserLocation] = useState(null);
@@ -16,25 +15,17 @@ const Parking = ({route, navigation}) => {
   let id = null;
   const [destination, setdestination] = useState();
   const [parking, setparking] = useState(null);
-
-  const getUserLocation = async () => {
-    const value = await AsyncStorage.getItem('user');
-
-    const user = JSON.parse(value);
-    return user;
-  };
+  const [user, setUser] = useState(null);
 
   const stopTrackingLocation = () => {
-    console.log('stop ' + id);
     Geolocation.clearWatch(id);
   };
 
-  const startTrackingLocation = () => {
+  const startTrackingLocation = async () => {
     console.log(' insde');
     id = Geolocation.watchPosition(
       position => {
         const {latitude, longitude} = position.coords;
-        console.log('innside start tracking');
         console.log(position);
         setuserLocation({latitude, longitude});
       },
@@ -48,17 +39,29 @@ const Parking = ({route, navigation}) => {
         maximumAge: 10000,
       },
     );
-    console.log('id : ' + id);
   };
   useEffect(() => {
+    console.log(route.params);
     const parking = route.params.parking;
+    const u = route.params.user;
+    setUser(u);
     setparking(parking);
     setdestination({
       latitude: parking.lat,
       longitude: parking.lon,
     });
+    const origin = {
+      latitude: u.lat,
+      longitude: u.lon,
+    };
+    console.log('fiiiiiiiinek');
+
+    // const coordinates = [origin, destination];
+    // mapRef.current.fitToCoordinates(coordinates, {
+    //   edgePadding: {top: 50, right: 50, left: 50, bottom: 100},
+    //   animated: true,
+    // });
     startTrackingLocation();
-    console.log('All my friends are alive');
 
     return () => {
       stopTrackingLocation();
@@ -70,6 +73,7 @@ const Parking = ({route, navigation}) => {
       {userLocation ? (
         <View className="flex h-full w-full">
           <MapView
+            mapType="standard"
             ref={mapRef}
             className="absolute top-0 left-0 right-0 bottom-0 "
             region={{
@@ -82,28 +86,13 @@ const Parking = ({route, navigation}) => {
               <MapViewDirections
                 origin={userLocation}
                 destination={destination}
-                strokeWidth={3}
+                strokeWidth={5}
                 apikey={'AIzaSyBUDF9iyMau1IH76K7z2KVbwIPQbrpNTT0'}
-                onReady={result => {
-                  const origin = {
-                    latitude: userLocation.latitude,
-                    longitude: userLocation.longitude,
-                  };
-                  const destination = {
-                    latitude: 33.560487,
-                    longitude: -7.697092,
-                  };
-
-                  const coordinates = [origin, destination];
-                  mapRef.current.fitToCoordinates(coordinates, {
-                    edgePadding: {top: 50, right: 50, left: 50, bottom: 100},
-                    animated: true, // You can enable animation if desired
-                  });
-                }}
               />
             )}
             {userLocation && (
               <Marker
+                pinColor={'#000000'}
                 identifier="origin"
                 coordinate={{
                   latitude: userLocation.latitude,

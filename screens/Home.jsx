@@ -32,8 +32,26 @@ const Home = ({navigation}) => {
   const [addr, setaddr] = useState(null);
   const placesAutocompleteRef = useRef(null);
   var ws = React.useRef(new WebSocket(`${WS_URL}`)).current;
+  const categories = [
+    {
+      name: 'CAR',
+      image: require('../assets/car.png'),
+    },
+    {
+      name: 'MOTO',
+      image: require('../assets/moto.png'),
+    },
+    {
+      name: 'TRACK',
+      image: require('../assets/track.png'),
+    },
+    {
+      name: 'BIKE',
+      image: require('../assets/bike.png'),
+    },
+  ];
   const [notifications, setNotifications] = useState([
-    'hello to our amazin app',
+    'hello to our amazing app',
   ]);
   const [showNotifications, setShowNotifications] = useState(false);
 
@@ -63,6 +81,8 @@ const Home = ({navigation}) => {
           params: {
             addr,
             vehicule,
+            lat: user.lat,
+            lon: user.lon,
           },
         })
         .then(function (response) {
@@ -236,7 +256,7 @@ const Home = ({navigation}) => {
                 contentContainerStyle={{paddingHorizontal: 15, paddingTop: 10}}
                 horizontal
                 showsHorizontalScrollIndicator={false}>
-                {['CAR', 'MOTO', 'TRACK', 'BIKE'].map((value, index) => (
+                {categories.map((value, index) => (
                   <TouchableOpacity
                     onPress={() => {
                       if (selected === index) {
@@ -244,7 +264,7 @@ const Home = ({navigation}) => {
                         setvehicule(null);
                       } else {
                         setselected(index);
-                        setvehicule(value);
+                        setvehicule(value.name);
                       }
                     }}
                     key={index}
@@ -253,10 +273,10 @@ const Home = ({navigation}) => {
                     }`}>
                     <Image
                       className="w-[70px] h-[70px]"
-                      source={require('../assets/car.png')}
+                      source={value.image}
                       resizeMode={'contain'}
                     />
-                    <Text className="text-black mt-[-10px]">{value}</Text>
+                    <Text className="text-black mt-[-10px]">{value.name}</Text>
                   </TouchableOpacity>
                 ))}
               </ScrollView>

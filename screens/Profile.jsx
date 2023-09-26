@@ -17,7 +17,9 @@ import {
 } from 'react-native-heroicons/outline';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useNavigation} from '@react-navigation/native';
 const Profile = () => {
+  const navigation = useNavigation();
   const [isLoding, setisLoding] = useState(true);
   const [user, setUser] = useState();
   const TostMessage = () => {
@@ -29,6 +31,10 @@ const Profile = () => {
     const user = JSON.parse(value);
     console.log(user);
     return user;
+  };
+  const logOut = async () => {
+    await AsyncStorage.removeItem('user');
+    navigation.navigate('Login');
   };
 
   useEffect(() => {
@@ -144,10 +150,7 @@ const Profile = () => {
           <View>
             <TouchableOpacity
               className="w-[80%] m-auto flex flex-row justify-center items-center mt-4 rounde-lg bg-slate-50  h-12"
-              onPress={() => {
-                TostMessage();
-                navigation.goBack();
-              }}>
+              onPress={logOut}>
               <ArrowRightOnRectangleIcon size={20} color="red" />
               <Text className="ml-2 text-black ">Log Out</Text>
             </TouchableOpacity>

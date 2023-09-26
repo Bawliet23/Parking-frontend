@@ -149,7 +149,7 @@ const Register = ({navigation}) => {
         <Text className="text-black  text-lg">Dont have an account?</Text>
         <Pressable
           className="h-12 border-[1px] w-40 shadow-xl bg-white font-semibold flex items-center justify-center rounded-xl"
-          onPress={() => navigation.navigate('Register')}>
+          onPress={() => navigation.navigate('Login')}>
           <Text className="text-black font-semibold text-lg">Sign Up</Text>
         </Pressable>
       </View>

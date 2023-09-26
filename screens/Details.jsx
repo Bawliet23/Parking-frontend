@@ -4,7 +4,7 @@ import {View, Text, Button, StyleSheet} from 'react-native';
 import React from 'react';
 import PaymentForm from './PaymentForm';
 import LinearGradient from 'react-native-linear-gradient';
-import {CardField, useStripe} from '@stripe/stripe-react-native';
+
 import {
   ArrowLeftIcon,
   ChevronLeftIcon,

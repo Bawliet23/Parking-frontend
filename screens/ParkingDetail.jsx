@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  Linking,
 } from 'react-native';
 import React, {
   useEffect,
@@ -127,7 +128,7 @@ const ParkingDetails = () => {
     axios
       .post(apiUrl, null, {params: requestData})
       .then(response => {
-        navigation.navigate('/Home');
+        navigation.navigate('Tickets');
       })
       .catch(error => {
         console.error('Error creating reservation:', error);
@@ -173,12 +174,30 @@ const ParkingDetails = () => {
             className="absolute top-10 left-4 z-10 bg-[#020C24]  p-2 rounded-xl">
             <ArrowLeftIcon size={20} color="white" />
           </TouchableOpacity>
-          <Image
+          <View className="relative w-full h-96 rounded overflow-hidden ">
+            {/* <ParkingDetailsTabView parkingInfo={parking} images={images} /> */}
+            {/* <ParkingInfo info={parking} /> */}
+            <MapView
+              className="w-full h-full  "
+              tooltip={true}
+              region={{
+                latitude: parking.lat,
+                longitude: parking.lon,
+                latitudeDelta: 0,
+                longitudeDelta: 0.004,
+              }}>
+              <Marker
+                pinColor={'#000'}
+                coordinate={{latitude: parking.lat, longitude: parking.lon}}
+              />
+            </MapView>
+          </View>
+          {/* <Image
             source={require('../assets/parking.jpg')}
             className="w-full h-72 bg-gray-300 p-4 "
-          />
+          /> */}
           <View>
-            <View className="flex flex-row bg-white rounded-tr-xl rounded-tl-lg mt-[-15px] pt-2">
+            <View className="flex flex-row bg-white rounded-tr-xl rounded-tl-lg my-4">
               <View className="bg-white rounded-tr-xl rounded-tl-lg  pt-2">
                 <Text className="text-2xl pl-2 font-bold  text-gray-700 ">
                   {parking.name}
@@ -195,7 +214,7 @@ const ParkingDetails = () => {
               </View>
               <View className="flex justify-center items-end pr-4 mt-8  flex-1">
                 <Text className="text-black text-xl font-semibold">
-                  {parking.price.toFixed(2)}$/h
+                  ${parking.price.toFixed(2)}/Hr
                 </Text>
                 <View className="flex flex-row">
                   <Text className="text-md pl-2 text-[#ccc] ">
@@ -204,9 +223,9 @@ const ParkingDetails = () => {
                 </View>
               </View>
             </View>
-            <View className="flex flex-row items-center justify-center w-full mt-4">
+            <View className="flex flex-row items-center justify-center w-full my-4">
               <TouchableOpacity
-                onPress={() => navigation.navigate('Parking', {parking})}
+                onPress={() => navigation.navigate('Parking', {parking, user})}
                 className="w-28 h-14 flex-row py-4 px-2 mr-4 rounded-xl flex justify-around align-middle items-center bg-gray-100 ">
                 <MapPinIcon size={25} color="black" />
                 <Text className="text-black ">Directions</Text>
@@ -237,7 +256,9 @@ const ParkingDetails = () => {
               />
 
               <TouchableOpacity
-                onPress={() => {}}
+                onPress={() => {
+                  Linking.openURL(`tel:0644970548`);
+                }}
                 className="w-28 h-14 py-4 px-2 mr-4 rounded-xl flex flex-row justify-center align-middle items-center bg-gray-100 ">
                 <PhoneIcon size={25} color="black" />
                 <Text className="text-black ">Call</Text>
@@ -270,24 +291,8 @@ const ParkingDetails = () => {
             <TouchableOpacity
               onPress={onCheckOut}
               className="mx-4 w-88 h-12 rounded-lg mb-1 flex justify-center items-center bg-[#0e111f]">
-              <Text style={styles.reserveButtonText}>Reserve Parking</Text>
+              <Text style={styles.reserveButtonText}>Book Now</Text>
             </TouchableOpacity>
-            <View className="relative w-full h-48 rounded overflow-hidden mb-4">
-              {/* <ParkingDetailsTabView parkingInfo={parking} images={images} /> */}
-              {/* <ParkingInfo info={parking} /> */}
-              <MapView
-                className="absolute top-0 left-0 right-0 bottom-0  rounded"
-                region={{
-                  latitude: parking.lat,
-                  longitude: parking.lon,
-                  latitudeDelta: 0,
-                  longitudeDelta: 0.004,
-                }}>
-                <Marker
-                  coordinate={{latitude: parking.lat, longitude: parking.lon}}
-                />
-              </MapView>
-            </View>
           </View>
           <CardField
             postalCodeEnabled={false}
